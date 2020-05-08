@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\TechnologyRepository")
  */
-class Category
+class Technology
 {
     /**
      * @ORM\Id()
@@ -19,12 +19,12 @@ class Category
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=35)
+     * @ORM\Column(type="string", length=50)
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Notes", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="App\Entity\Notes", mappedBy="technology")
      */
     private $notes;
 
@@ -62,7 +62,7 @@ class Category
     {
         if (!$this->notes->contains($note)) {
             $this->notes[] = $note;
-            $note->setCategory($this);
+            $note->setTechnology($this);
         }
 
         return $this;
@@ -73,8 +73,8 @@ class Category
         if ($this->notes->contains($note)) {
             $this->notes->removeElement($note);
             // set the owning side to null (unless already changed)
-            if ($note->getCategory() === $this) {
-                $note->setCategory(null);
+            if ($note->getTechnology() === $this) {
+                $note->setTechnology(null);
             }
         }
 
