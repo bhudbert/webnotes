@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Notes;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,9 +14,7 @@ class NoteType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('content')
-            ->add('createdAt')
-            ->add('updatedAt')
+            ->add('content',TextType::class)
             ->add('category')
             ->add('technology')
         ;
