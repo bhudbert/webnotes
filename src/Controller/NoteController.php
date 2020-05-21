@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Notes;
 use App\Form\NoteType;
+use App\Repository\NotesRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +24,7 @@ class NoteController extends AbstractController
      */
 
     private $em;
-    public function __construct(UserRepository $repository,EntityManagerInterface $em)
+    public function __construct(NotesRepository $repository,EntityManagerInterface $em)
     {
         $this->repository = $repository;
         $this->em = $em;
@@ -36,20 +38,31 @@ class NoteController extends AbstractController
  */
     public function edit($id,Request $request)
     {
-        $note=$this->repository->find($id);
 
+        if($id==0){
+            $note=new Notes();
+            $note->setCreatedAt(new \DateTime());
+            echo "Id reduit a $id";
+        }else{
+            $note=$this->repository->find($id);
+            echo $id;
+        }
         $form = $this->createForm(NoteType::class,$note);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+            $note->setUpdatedAt(new \DateTime());
+            $this->em->persist($note);
             $this->em->flush();
-            // return $this->redirectToRoute('home');
-        }
+            return $this->redirectToRoute('home');
+            }
 
-    return $this->render('note/index.html.twig', [
-    'note' => $note,
-    'form' => $form->createView()
-    ]);
+
+
+        return $this->render('note/index.html.twig', [
+        'note' => $note,
+        'form' => $form->createView()
+        ]);
     }
 
 }
